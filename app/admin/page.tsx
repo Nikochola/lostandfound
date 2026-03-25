@@ -351,7 +351,7 @@ export default function AdminPage() {
                   <ItemCard item={item} onMarkReturned={handleMarkReturned} showActions />
                   <button
                     onClick={() => handleDelete(item.id)}
-                    className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 w-7 h-7 bg-red-50 hover:bg-red-100 text-red-400 rounded-lg flex items-center justify-center transition-all"
+                    className="absolute top-3 right-3 sm:opacity-0 sm:group-hover:opacity-100 w-7 h-7 bg-red-50 hover:bg-red-100 text-red-400 rounded-lg flex items-center justify-center transition-all"
                     title="წაშლა"
                   >
                     <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

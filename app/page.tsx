@@ -33,33 +33,33 @@ export default async function HomePage() {
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
       {/* ── Hero ── */}
-      <section className="py-12 sm:py-16 flex flex-col items-center text-center gap-6">
-        <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 tracking-tight leading-[1.08] font-serif max-w-2xl">
+      <section className="py-10 sm:py-16 flex flex-col items-center text-center gap-4 sm:gap-6">
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 tracking-tight leading-[1.08] font-serif max-w-2xl">
           დაკარგე ნივთი?
         </h1>
-        <p className="text-base text-gray-400 max-w-md leading-relaxed font-sans">
+        <p className="text-sm sm:text-base text-gray-400 max-w-md leading-relaxed font-sans">
           შეამოწმე სკოლაში ნაპოვნი ნივთები
         </p>
-        <div className="flex items-center gap-5 mt-2">
-          <Link href="/items" className="btn-primary">
+        <div className="flex items-center gap-5 mt-1 sm:mt-2">
+          <Link href="/items" className="btn-primary" style={{padding:'14px 36px'}}>
             ნივთების ნახვა
           </Link>
         </div>
       </section>
 
       {/* ── Stats ── */}
-      <section className="grid grid-cols-3 gap-4 pb-14">
-        <div className="rounded-2xl bg-[#f3f2ff] p-6 flex flex-col gap-2">
-          <span className="text-4xl font-bold text-brand font-serif">{allItems.length}</span>
-          <span className="text-sm text-gray-500 font-sans">ნაპოვნი ნივთი</span>
+      <section className="grid grid-cols-3 gap-3 sm:gap-4 pb-14">
+        <div className="rounded-2xl bg-[#f3f2ff] p-4 sm:p-6 flex flex-col gap-1 sm:gap-2">
+          <span className="text-3xl sm:text-4xl font-bold text-brand font-serif">{allItems.length}</span>
+          <span className="text-xs sm:text-sm text-gray-500 font-sans">ნაპოვნი ნივთი</span>
         </div>
-        <div className="rounded-2xl bg-accent-pale border-2 border-accent p-6 flex flex-col gap-2">
-          <span className="text-4xl font-bold text-yellow-700 font-serif">{available.length}</span>
-          <span className="text-sm text-gray-500 font-sans">ელოდება მფლობელს</span>
+        <div className="rounded-2xl bg-accent-pale border-2 border-accent p-4 sm:p-6 flex flex-col gap-1 sm:gap-2">
+          <span className="text-3xl sm:text-4xl font-bold text-yellow-700 font-serif">{available.length}</span>
+          <span className="text-xs sm:text-sm text-gray-500 font-sans">ელოდება მფლობელს</span>
         </div>
-        <div className="rounded-2xl bg-green-50 p-6 flex flex-col gap-2">
-          <span className="text-4xl font-bold text-green-600 font-serif">{returned.length}</span>
-          <span className="text-sm text-gray-500 font-sans">დაბრუნებული</span>
+        <div className="rounded-2xl bg-green-50 p-4 sm:p-6 flex flex-col gap-1 sm:gap-2">
+          <span className="text-3xl sm:text-4xl font-bold text-green-600 font-serif">{returned.length}</span>
+          <span className="text-xs sm:text-sm text-gray-500 font-sans">დაბრუნებული</span>
         </div>
       </section>
 
@@ -75,10 +75,10 @@ export default async function HomePage() {
             <Link
               key={cat}
               href={`/items?category=${encodeURIComponent(cat)}`}
-              className={`rounded-2xl border-2 ${border} p-8 flex flex-col items-center gap-3 hover:scale-[1.02] transition-transform bg-white`}
+              className={`rounded-2xl border-2 ${border} p-4 sm:p-8 flex flex-col items-center gap-2 sm:gap-3 hover:scale-[1.02] transition-transform bg-white`}
             >
-              <span className={`text-2xl font-bold font-serif ${text}`}>{cat}</span>
-              <span className="text-sm text-gray-400 font-sans">{count} ნივთი</span>
+              <span className={`text-lg sm:text-2xl font-bold font-serif ${text}`}>{cat}</span>
+              <span className="text-xs sm:text-sm text-gray-400 font-sans">{count} ნივთი</span>
             </Link>
           ))}
         </div>
