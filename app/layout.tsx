@@ -3,8 +3,8 @@ import './globals.css'
 import Navbar from '@/components/Navbar'
 
 export const metadata: Metadata = {
-  title: 'დაკარგული & ნაპოვნი — ათასნლეულის სკოლა',
-  description: 'ათასნლეულის სკოლის დაკარგული და ნაპოვნი ნივთები',
+  title: 'დაკარგული & ნაპოვნი — ათასწლეულის სკოლა',
+  description: 'ათასწლეულის სკოლის დაკარგული და ნაპოვნი ნივთები',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
