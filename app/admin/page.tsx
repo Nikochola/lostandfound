@@ -73,6 +73,11 @@ export default function AdminPage() {
     // Upload image first if provided
     let imageUrl = ''
     if (imageFile) {
+      if (imageFile.size > 8 * 1024 * 1024) {
+        setError('სურათი ძალიან დიდია. მაქსიმუმი 8MB.')
+        setSubmitting(false)
+        return
+      }
       const fd = new FormData()
       fd.append('file', imageFile)
       const uploadRes = await fetch('/api/upload', {
@@ -80,10 +85,13 @@ export default function AdminPage() {
         headers: { 'x-admin-password': password },
         body: fd,
       })
-      if (uploadRes.ok) {
-        const uploadData = await uploadRes.json()
-        imageUrl = uploadData.url
+      const uploadData = await uploadRes.json()
+      if (!uploadRes.ok) {
+        setError(`სურათის ატვირთვა ვერ მოხდა: ${uploadData.error || uploadRes.status}`)
+        setSubmitting(false)
+        return
       }
+      imageUrl = uploadData.url
     }
 
     const res = await fetch('/api/items', {
@@ -295,10 +303,12 @@ export default function AdminPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                     <span className="text-sm text-gray-400 font-sans">სურათის ატვირთვა</span>
+                    <span className="text-xs text-gray-300 font-sans">მაქს. 8MB</span>
                     <input
                       type="file"
                       accept="image/*"
                       className="hidden"
+                      onClick={e => { (e.target as HTMLInputElement).value = '' }}
                       onChange={e => {
                         const f = e.target.files?.[0] ?? null
                         setImageFile(f)
