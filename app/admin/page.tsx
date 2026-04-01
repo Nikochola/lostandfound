@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import ItemCard from '@/components/ItemCard'
 import { Item, Category } from '@/lib/types'
+import { MAX_IMAGE_UPLOAD_BYTES, MAX_IMAGE_UPLOAD_LABEL } from '@/lib/upload'
 
 interface Report {
   id: string
@@ -73,8 +74,8 @@ export default function AdminPage() {
     // Upload image first if provided
     let imageUrl = ''
     if (imageFile) {
-      if (imageFile.size > 8 * 1024 * 1024) {
-        setError('სურათი ძალიან დიდია. მაქსიმუმი 8MB.')
+      if (imageFile.size > MAX_IMAGE_UPLOAD_BYTES) {
+        setError(`სურათი ძალიან დიდია. მაქსიმუმი ${MAX_IMAGE_UPLOAD_LABEL}.`)
         setSubmitting(false)
         return
       }
@@ -303,7 +304,7 @@ export default function AdminPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                     <span className="text-sm text-gray-400 font-sans">სურათის ატვირთვა</span>
-                    <span className="text-xs text-gray-300 font-sans">მაქს. 8MB</span>
+                    <span className="text-xs text-gray-300 font-sans">მაქს. {MAX_IMAGE_UPLOAD_LABEL}</span>
                     <input
                       type="file"
                       accept="image/*"
@@ -311,8 +312,22 @@ export default function AdminPage() {
                       onClick={e => { (e.target as HTMLInputElement).value = '' }}
                       onChange={e => {
                         const f = e.target.files?.[0] ?? null
+                        if (!f) {
+                          setImageFile(null)
+                          setImagePreview(null)
+                          return
+                        }
+
+                        if (f.size > MAX_IMAGE_UPLOAD_BYTES) {
+                          setError(`სურათი ძალიან დიდია. მაქსიმუმი ${MAX_IMAGE_UPLOAD_LABEL}.`)
+                          setImageFile(null)
+                          setImagePreview(null)
+                          return
+                        }
+
+                        setError('')
                         setImageFile(f)
-                        if (f) setImagePreview(URL.createObjectURL(f))
+                        setImagePreview(URL.createObjectURL(f))
                       }}
                     />
                   </label>
