@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { Item } from '@/lib/types'
 
 const CATEGORY_STYLES: Record<string, { bg: string; text: string; icon: React.ReactNode }> = {
@@ -49,34 +49,14 @@ interface ItemCardProps {
 
 export default function ItemCard({ item, onMarkReturned, showActions = false }: ItemCardProps) {
   const style = CATEGORY_STYLES[item.category] ?? CATEGORY_STYLES['სხვა']
-  const [lightboxOpen, setLightboxOpen] = useState(false)
 
-  useEffect(() => {
-    if (!lightboxOpen) return
-    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') setLightboxOpen(false) }
-    document.addEventListener('keydown', handler)
-    return () => document.removeEventListener('keydown', handler)
-  }, [lightboxOpen])
-
-  return (
-    <>
-      <div className={`card overflow-hidden flex flex-col gap-0 ${item.status === 'returned' ? 'opacity-60' : ''}`}>
-        {/* Image */}
-        {item.imageUrl && (
-          <button
-            onClick={() => setLightboxOpen(true)}
-            className="block w-full overflow-hidden group relative"
-            aria-label="სურათის გადიდება"
-          >
-            <img src={item.imageUrl} alt={item.name} className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300" />
-            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-200 flex items-center justify-center">
-              <svg className="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200 drop-shadow-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
-              </svg>
-            </div>
-          </button>
-        )}
-        <div className="p-5 flex flex-col gap-4">
+  const cardContent = (
+    <div className={`card overflow-hidden flex flex-col gap-0 ${item.status === 'returned' ? 'opacity-60' : ''} ${!showActions ? 'hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200' : ''}`}>
+      {/* Image */}
+      {item.imageUrl && (
+        <img src={item.imageUrl} alt={item.name} className="w-full h-40 object-cover" />
+      )}
+      <div className="p-5 flex flex-col gap-4">
         {/* Header */}
         <div className="flex items-start gap-3">
           <div className={`w-12 h-12 rounded-xl ${style.bg} ${style.text} flex items-center justify-center flex-shrink-0`}>
@@ -138,32 +118,25 @@ export default function ItemCard({ item, onMarkReturned, showActions = false }: 
             ✓ მფლობელს მიეცა
           </button>
         )}
-        </div>
-      </div>
 
-      {/* Lightbox */}
-      {lightboxOpen && item.imageUrl && (
-        <div
-          className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4"
-          onClick={() => setLightboxOpen(false)}
-        >
-          <button
-            className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
-            onClick={() => setLightboxOpen(false)}
-            aria-label="დახურვა"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+        {/* Public CTA */}
+        {!showActions && item.status === 'available' && (
+          <div className="flex items-center gap-1 text-sm text-brand font-medium font-sans">
+            ნივთის მოთხოვნა
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
-          </button>
-          <img
-            src={item.imageUrl}
-            alt={item.name}
-            className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl"
-            onClick={e => e.stopPropagation()}
-          />
-        </div>
-      )}
-    </>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+
+  if (showActions) return cardContent
+
+  return (
+    <Link href={`/items/${item.id}`} className="block">
+      {cardContent}
+    </Link>
   )
 }

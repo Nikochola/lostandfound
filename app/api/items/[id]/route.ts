@@ -3,6 +3,17 @@ import { supabase } from '@/lib/supabase'
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'millennium2026'
 
+export async function GET(_req: NextRequest, { params }: { params: { id: string } }) {
+  const { data, error } = await supabase
+    .from('items')
+    .select('*')
+    .eq('id', params.id)
+    .single()
+
+  if (error || !data) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+  return NextResponse.json({ ...data, imageUrl: data.image_url })
+}
+
 export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
   const body = await request.json()
   if (body.password !== ADMIN_PASSWORD) {
