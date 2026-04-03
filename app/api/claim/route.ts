@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
 const TO = 'freelance@millennium-school.org'
 
 export async function POST(request: NextRequest) {
+  const resend = new Resend(process.env.RESEND_API_KEY)
   const body = await request.json()
   const { itemId, itemName, claimerName, claimerContact, message } = body
 
