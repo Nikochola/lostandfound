@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
+import { mapItem } from '@/lib/items'
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'millennium2026'
 
@@ -11,7 +12,7 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
     .single()
 
   if (error || !data) return NextResponse.json({ error: 'Not found' }, { status: 404 })
-  return NextResponse.json({ ...data, imageUrl: data.image_url })
+  return NextResponse.json(mapItem(data))
 }
 
 export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {

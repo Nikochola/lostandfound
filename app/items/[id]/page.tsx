@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import { Item } from '@/lib/types'
 import ClaimForm from '@/components/ClaimForm'
+import { mapItem } from '@/lib/items'
 
 async function getItem(id: string): Promise<Item | null> {
   const { data, error } = await supabase
@@ -11,8 +12,13 @@ async function getItem(id: string): Promise<Item | null> {
     .eq('id', id)
     .single()
 
-  if (error || !data) return null
-  return { ...data, imageUrl: data.image_url }
+  if (error) {
+    if (error.code === 'PGRST116') return null
+    throw new Error(error.message)
+  }
+
+  if (!data) return null
+  return mapItem(data)
 }
 
 function formatDate(dateStr: string) {
@@ -28,7 +34,28 @@ const CATEGORY_BG: Record<string, string> = {
 }
 
 export default async function ItemDetailPage({ params }: { params: { id: string } }) {
-  const item = await getItem(params.id)
+  let item: Item | null = null
+
+  try {
+    item = await getItem(params.id)
+  } catch {
+    return (
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="card p-8 text-center space-y-4">
+          <h1 className="text-2xl font-bold text-gray-900 font-serif">ნივთის ჩატვირთვა ვერ მოხერხდა</h1>
+          <p className="text-sm text-gray-500 font-sans">
+            მონაცემების სერვერთან დაკავშირება ვერ მოხერხდა. სცადე თავიდან ცოტა ხანში.
+          </p>
+          <div className="flex justify-center">
+            <Link href="/items" className="btn-primary">
+              ნივთებზე დაბრუნება
+            </Link>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   if (!item) notFound()
 
   const badgeCls = CATEGORY_BG[item.category] ?? CATEGORY_BG['სხვა']

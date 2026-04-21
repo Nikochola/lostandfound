@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 import { MAX_IMAGE_UPLOAD_BYTES, MAX_IMAGE_UPLOAD_LABEL } from '@/lib/upload'
+import { getImageSrc } from '@/lib/items'
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'millennium2026'
 const BUCKET = 'lost-and-found'
@@ -37,6 +38,8 @@ export async function POST(request: NextRequest) {
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
-  const { data } = supabase.storage.from(BUCKET).getPublicUrl(filename)
-  return NextResponse.json({ url: data.publicUrl })
+  return NextResponse.json({
+    path: filename,
+    url: getImageSrc(filename),
+  })
 }

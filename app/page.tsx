@@ -3,6 +3,7 @@ import ItemCard from '@/components/ItemCard'
 import LostReportForm from '@/components/LostReportForm'
 import { supabase } from '@/lib/supabase'
 import { Item } from '@/lib/types'
+import { mapItem } from '@/lib/items'
 
 async function getItems(): Promise<Item[]> {
   const { data } = await supabase
@@ -10,17 +11,7 @@ async function getItems(): Promise<Item[]> {
     .select('*')
     .order('created_at', { ascending: false })
 
-  return (data ?? []).map(row => ({
-    id:          row.id,
-    name:        row.name,
-    category:    row.category,
-    description: row.description,
-    location:    row.location,
-    date:        row.date,
-    status:      row.status,
-    color:       row.color,
-    imageUrl:    row.image_url,
-  }))
+  return (data ?? []).map(mapItem)
 }
 
 export default async function HomePage() {

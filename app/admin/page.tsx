@@ -92,7 +92,7 @@ export default function AdminPage() {
         setSubmitting(false)
         return
       }
-      imageUrl = uploadData.url
+      imageUrl = uploadData.path || uploadData.url
     }
 
     const res = await fetch('/api/items', {

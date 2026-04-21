@@ -1,21 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
+import { mapItem } from '@/lib/items'
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'millennium2026'
-
-function toItem(row: Record<string, unknown>) {
-  return {
-    id:          row.id          as string,
-    name:        row.name        as string,
-    category:    row.category    as string,
-    description: row.description as string,
-    location:    row.location    as string,
-    date:        row.date        as string,
-    status:      row.status      as string,
-    color:       row.color       as string,
-    imageUrl:    row.image_url   as string,
-  }
-}
 
 export async function GET() {
   const { data, error } = await supabase
@@ -24,7 +11,7 @@ export async function GET() {
     .order('created_at', { ascending: false })
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-  return NextResponse.json((data ?? []).map(toItem))
+  return NextResponse.json((data ?? []).map(mapItem))
 }
 
 export async function POST(request: NextRequest) {
@@ -51,5 +38,5 @@ export async function POST(request: NextRequest) {
     .single()
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-  return NextResponse.json(toItem(data as Record<string, unknown>), { status: 201 })
+  return NextResponse.json(mapItem(data), { status: 201 })
 }
