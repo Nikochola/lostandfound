@@ -3,15 +3,17 @@ import ItemCard from '@/components/ItemCard'
 import LostReportForm from '@/components/LostReportForm'
 import { supabase } from '@/lib/supabase'
 import { Item } from '@/lib/types'
-import { mapItem } from '@/lib/items'
+import { getFallbackItems, mapItem } from '@/lib/items'
 
 async function getItems(): Promise<Item[]> {
+  if (!supabase) return getFallbackItems()
+
   const { data } = await supabase
     .from('items')
     .select('*')
     .order('created_at', { ascending: false })
 
-  return (data ?? []).map(mapItem)
+  return data?.map(mapItem) ?? getFallbackItems()
 }
 
 export default async function HomePage() {

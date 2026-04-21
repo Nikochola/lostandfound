@@ -12,12 +12,22 @@ function ItemsContent() {
   const [items, setItems] = useState<Item[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
+  const [error, setError] = useState('')
 
   useEffect(() => {
     fetch('/api/items')
-      .then(r => r.json())
-      .then(data => { setItems(data); setLoading(false) })
-      .catch(() => setLoading(false))
+      .then(async r => {
+        const data = await r.json()
+        if (!Array.isArray(data)) {
+          throw new Error(typeof data?.error === 'string' ? data.error : 'Unexpected API response')
+        }
+        setItems(data)
+      })
+      .catch(err => {
+        setItems([])
+        setError(err instanceof Error ? err.message : 'ნივთების ჩატვირთვა ვერ მოხერხდა')
+      })
+      .finally(() => setLoading(false))
   }, [])
 
   const filtered = items.filter(item => {
@@ -77,6 +87,11 @@ function ItemsContent() {
           {[...Array(6)].map((_, i) => (
             <div key={i} className="card p-5 h-48 animate-pulse bg-gray-50" />
           ))}
+        </div>
+      ) : error ? (
+        <div className="text-center py-20 space-y-3">
+          <p className="text-gray-500 font-medium font-sans">ნივთების ჩატვირთვა ვერ მოხერხდა</p>
+          <p className="text-sm text-gray-400 font-sans">{error}</p>
         </div>
       ) : filtered.length > 0 ? (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">

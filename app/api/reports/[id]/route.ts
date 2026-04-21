@@ -4,6 +4,10 @@ import { supabase } from '@/lib/supabase'
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'millennium2026'
 
 export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
+  if (!supabase) {
+    return NextResponse.json({ error: 'Database is not configured' }, { status: 503 })
+  }
+
   const body = await request.json()
   if (body.password !== ADMIN_PASSWORD) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
@@ -19,6 +23,10 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
 }
 
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+  if (!supabase) {
+    return NextResponse.json({ error: 'Database is not configured' }, { status: 503 })
+  }
+
   const body = await request.json()
   if (body.password !== ADMIN_PASSWORD) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 

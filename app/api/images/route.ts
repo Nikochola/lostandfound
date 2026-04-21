@@ -17,6 +17,10 @@ function inferContentType(path: string) {
 }
 
 export async function GET(request: NextRequest) {
+  if (!supabase) {
+    return NextResponse.json({ error: 'Image storage is not configured' }, { status: 503 })
+  }
+
   const path = request.nextUrl.searchParams.get('path')?.trim()
 
   if (!path) {

@@ -15,6 +15,8 @@ export async function GET(request: NextRequest) {
   const pwd = request.headers.get('x-admin-password')
   if (pwd !== ADMIN_PASSWORD) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
+  if (!supabase) return NextResponse.json([])
+
   const { data, error } = await supabase
     .from('reports')
     .select('*')
@@ -25,6 +27,10 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  if (!supabase) {
+    return NextResponse.json({ error: 'Database is not configured' }, { status: 503 })
+  }
+
   const body = await request.json()
   if (!body.name?.trim() || !body.description?.trim()) {
     return NextResponse.json({ error: 'სახელი და აღწერა სავალდებულოა' }, { status: 400 })

@@ -7,6 +7,10 @@ const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'millennium2026'
 const BUCKET = 'lost-and-found'
 
 export async function POST(request: NextRequest) {
+  if (!supabase) {
+    return NextResponse.json({ error: 'Image storage is not configured' }, { status: 503 })
+  }
+
   const password = request.headers.get('x-admin-password')
   if (password !== ADMIN_PASSWORD) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })

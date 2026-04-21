@@ -1,20 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
-import { mapItem } from '@/lib/items'
+import { getFallbackItems, mapItem } from '@/lib/items'
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'millennium2026'
 
 export async function GET() {
+  if (!supabase) return NextResponse.json(getFallbackItems())
+
   const { data, error } = await supabase
     .from('items')
     .select('*')
     .order('created_at', { ascending: false })
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) return NextResponse.json(getFallbackItems())
   return NextResponse.json((data ?? []).map(mapItem))
 }
 
 export async function POST(request: NextRequest) {
+  if (!supabase) {
+    return NextResponse.json({ error: 'Database is not configured' }, { status: 503 })
+  }
+
   const body = await request.json()
 
   if (body.password !== ADMIN_PASSWORD) {

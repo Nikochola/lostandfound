@@ -3,9 +3,13 @@ import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import { Item } from '@/lib/types'
 import ClaimForm from '@/components/ClaimForm'
-import { mapItem } from '@/lib/items'
+import { getFallbackItems, mapItem } from '@/lib/items'
 
 async function getItem(id: string): Promise<Item | null> {
+  if (!supabase) {
+    return getFallbackItems().find(item => item.id === id) ?? null
+  }
+
   const { data, error } = await supabase
     .from('items')
     .select('*')
@@ -13,11 +17,13 @@ async function getItem(id: string): Promise<Item | null> {
     .single()
 
   if (error) {
-    if (error.code === 'PGRST116') return null
+    if (error.code === 'PGRST116') {
+      return getFallbackItems().find(item => item.id === id) ?? null
+    }
     throw new Error(error.message)
   }
 
-  if (!data) return null
+  if (!data) return getFallbackItems().find(item => item.id === id) ?? null
   return mapItem(data)
 }
 
