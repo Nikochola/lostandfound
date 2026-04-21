@@ -5,6 +5,8 @@ import { supabase } from '@/lib/supabase'
 import { Item } from '@/lib/types'
 import { getFallbackItems, mapItem } from '@/lib/items'
 
+export const dynamic = 'force-dynamic'
+
 async function getItems(): Promise<Item[]> {
   if (!supabase) return getFallbackItems()
 

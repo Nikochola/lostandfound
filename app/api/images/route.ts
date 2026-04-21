@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 
 const BUCKET = 'lost-and-found'
+export const dynamic = 'force-dynamic'
 
 function inferContentType(path: string) {
   const normalized = path.toLowerCase()

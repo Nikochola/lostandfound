@@ -3,6 +3,7 @@ import { supabase } from '@/lib/supabase'
 import { getFallbackItems, mapItem } from '@/lib/items'
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'millennium2026'
+export const dynamic = 'force-dynamic'
 
 export async function GET() {
   if (!supabase) return NextResponse.json(getFallbackItems())
