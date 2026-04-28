@@ -36,6 +36,7 @@ function ItemsContent() {
     if (search) {
       const q = search.toLowerCase()
       return (
+        item.id.toLowerCase().includes(q) ||
         item.name.toLowerCase().includes(q) ||
         item.description.toLowerCase().includes(q) ||
         item.location.toLowerCase().includes(q) ||
@@ -65,7 +66,7 @@ function ItemsContent() {
           type="text"
           value={search}
           onChange={e => setSearch(e.target.value)}
-          placeholder="ძებნა სახელით, ადგილით, ფერით..."
+          placeholder="ძებნა ID-ით, სახელით, ადგილით, ფერით..."
           className="input pl-10"
         />
         {search && (
