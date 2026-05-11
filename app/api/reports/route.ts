@@ -13,13 +13,13 @@ export interface Report {
 
 export async function GET(request: NextRequest) {
   const pwd = request.headers.get('x-admin-password')
-  if (pwd !== ADMIN_PASSWORD) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  const isAdmin = pwd === ADMIN_PASSWORD
 
   if (!supabase) return NextResponse.json([])
 
   const { data, error } = await supabase
     .from('reports')
-    .select('*')
+    .select(isAdmin ? '*' : 'id, name, description, date, created_at')
     .order('created_at', { ascending: false })
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
